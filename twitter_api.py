@@ -3,6 +3,9 @@ import json
 from time import sleep
 import sys, os
 from random import randint
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
+import pickle
 
 def get_config(filename,username):
         j = json.load(open(filename))
@@ -106,14 +109,45 @@ class TweetBot:
                 except tweepy.error.TweepError:
                     print('Error unfollowing.')
 
-    def 
-        
 
+    def cleanup_follows(self, screen_name):
+        filename = screen_name + '_follows.pckl'
+        filepath = os.path.join(os.path.dirname(__file__), filename)
+        user_obj = self.api.get_user(screen_name)
+        following_size = user_obj.friends_count
+
+        cursor_position = 0
+
+        for friends_ids in tweepy.Cursor(self.api.friends_ids, screen_name=screen_name, count_size=200).pages():
+            for id in friends_ids:
+                #check if last tweet is more than three months old
+                
+                status = self.api.user_timeline(id, count=1)
+                if not status:
+                    print("User ID: ", id)
+                    print("No status: ", status)
+                continue
+
+                print("=================>>>>>>")
+                print("User: ", user.screen_name)
+                three_months_ago = datetime.today() - relativedelta(months=+6)
+                if status.created_at <= three_months_ago:
+                    print("Last tweet date: is more than three months ==> ", status.created_at)
+                    user.unfollow
+                    print("unfollowed")
+                
+
+                #check if following back
+
+                #check if bio has keyword
+                sleep(60)
+            
         
 if __name__=="__main__":
   
-    # t_bot = TweetBot("kwesi_dadson")
+    t_bot = TweetBot("kwesi_dadson")
     # t_bot.search_follow_trains()
     # t_bot.reply_status("1267189208600457217", "Then take this seriously! Delete this tweet!!")
     # t_bot.search_follow_trains()
 
+    t_bot.cleanup_follows("kwesi_dadson")
