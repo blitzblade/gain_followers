@@ -105,9 +105,11 @@ class TweetBot:
                 print(f'Unfollowing @{relationship.screen_name} ({relationship.id})')
                 try:
                     self.api.destroy_friendship(relationship.id)
-                    sleep(5)
+                  
                 except tweepy.error.TweepError:
                     print('Error unfollowing.')
+            print(f"Done with @{relationship.screen_name}...")
+            sleep(5)
 
 
     def cleanup_follows(self, screen_name):
